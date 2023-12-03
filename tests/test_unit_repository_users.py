@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 from sqlalchemy.orm import Session
 
 from src.database.models import User, Contact
-from src.schemas import UserBase, UserResponse
+from src.schemas import UserModel, UserResponse
 from src.repository.users import (
     get_user_by_email,
     create_user,
@@ -32,19 +32,19 @@ class TestUser(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result, expected_user)
     
     async def test_create_user(self):
-        body_data = UserBase(
+        body = UserModel(
             id = 1,
             username = "Someone",
             email = "some@example.com",
             password = '123456'
         )
 
-        body = body_data.model_dump()
+
 
         result = await create_user(body, self.session)
-        self.assertEqual(result.username, body_data.username)
-        self.assertEqual(result.email, body_data.email)
-        self.assertEqual(result.password, body_data.password)
+        self.assertEqual(result.username, body.username)
+        self.assertEqual(result.email, body.email)
+        self.assertEqual(result.password, body.password)
         self.assertTrue(hasattr(result, "id"))
 
     async def test_update_token(self):

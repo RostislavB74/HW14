@@ -1,16 +1,8 @@
-
-from pydantic_settings import BaseSettings
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
-dotenv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
-# if os.path.exists(dotenv_path):
-#     load_dotenv(dotenv_path)
+from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    sqlalchemy_database_url: str = 'postgresql+psycopg2://postgres:54321@localhost:5432/hw13'
+    sqlalchemy_database_url: str = 'postgresql+psycopg2://user:password@localhost:5432/postgres'
     secret_key: str = 'secret_key'
     algorithm: str = 'HS256'
     mail_username: str = 'example@meta.ua'
@@ -20,9 +12,9 @@ class Settings(BaseSettings):
     mail_server: str = 'smtp.meta.ua'
     redis_host: str = 'localhost'
     redis_port: int = 6379
-    cloudinary_name: str = 'SAadhsfhj'
-    cloudinary_api_key: int = 971882847358355
-    cloudinary_api_secret: str = 'dfdfdfdahfsjdg,h.P9g'
+    cloudinary_name: str = 'name'
+    cloudinary_api_key: int = 326488457974591
+    cloudinary_api_secret: str = 'secret'
 
     class Config:
         env_file = ".env"

@@ -1,5 +1,6 @@
+
 import pytest
-from fastapi.testclient import TestClient
+import fastapi.testclient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -42,13 +43,9 @@ def client(session):
 
     app.dependency_overrides[get_db] = override_get_db
 
-    yield TestClient(app)
+    yield fastapi.testclient.TestClient(app)
 
 
 @pytest.fixture(scope="module")
 def user():
-    return {
-        "username": "deadpool",
-        "email": "deadpool@example.com",
-        "password": "12345678",
-    }
+    return {"username": "deadpool", "email": "deadpool@example.com", "password": "12345678"}

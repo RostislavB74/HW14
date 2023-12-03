@@ -45,26 +45,26 @@ app.add_middleware(
 )
 
 
-ALLOWED_IPS = [ip_address('192.168.1.0'), ip_address(
-    '172.16.0.0'), ip_address("127.0.0.1")]
-
-
-@app.middleware("http")
-async def limit_access_by_ip(request: Request, call_next: Callable):
-    """
-    The limit_access_by_ip function is a middleware that limits access to the API only from certain IP addresses.
-    It checks if the client's IP address is in ALLOWED_IPS, and if not, it returns an error message.
-
-    :param request: Request: Get the ip address of the client
-    :param call_next: Callable: Pass the next function in the chain
-    :return: A jsonresponse object if the ip address is not allowed
-    :doc-author: Trelent
-    """
-    ip = ip_address(request.client.host)
-    if ip not in ALLOWED_IPS:
-        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"detail": "Not allowed IP address"})
-    response = await call_next(request)
-    return response
+# ALLOWED_IPS = [ip_address('192.168.1.0'), ip_address(
+#     '172.16.0.0'), ip_address("127.0.0.1")]
+#
+#
+# @app.middleware("http")
+# async def limit_access_by_ip(request: Request, call_next: Callable):
+#     """
+#     The limit_access_by_ip function is a middleware that limits access to the API only from certain IP addresses.
+#     It checks if the client's IP address is in ALLOWED_IPS, and if not, it returns an error message.
+#
+#     :param request: Request: Get the ip address of the client
+#     :param call_next: Callable: Pass the next function in the chain
+#     :return: A jsonresponse object if the ip address is not allowed
+#     :doc-author: Trelent
+#     """
+#     ip = ip_address(request.client.host)
+#     if ip not in ALLOWED_IPS:
+#         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"detail": "Not allowed IP address"})
+#     response = await call_next(request)
+#     return response
 
 
 @app.middleware('http')
