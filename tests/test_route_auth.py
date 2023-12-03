@@ -3,11 +3,13 @@ from unittest.mock import MagicMock
 from src.database.models import User
 from src.conf import messages
 
-user = {'username': "Rostyslav", 'email': 'deadpool@example.com', 'password': '123456789'}
+user = {'username': "Rostyslav",
+        'email': 'deadpool@example.com', 'password': '123456789'}
 
 
 def test_login_user_not_confirmed_email(client, user):
-    response = client.post("/api/auth/login", data={"username": user.get("email"), "password": user.get("password")})
+    response = client.post(
+        "/api/auth/login", data={"username": user.get("email"), "password": user.get("password")})
     assert response.status_code == 401, response.text
     payload = response.json()
     assert payload["detail"] == messages.EMAIL_NOT_CONFIRMED
@@ -68,7 +70,8 @@ def test_login_user_with_wrong_email(client, user, session):
     session.commit()
     response = client.post(
         "/api/auth/login",
-        data={"username": "example@test.com", "password": user.get("password")},
+        data={"username": "example@test.com",
+              "password": user.get("password")},
     )
     assert response.status_code == 401, response.text
     payload = response.json()
