@@ -5,11 +5,8 @@ from src.conf import messages
 
 
 def test_create_user(client, user, monkeypatch):
-    mock_session = MagicMock()
     mock_send_email = MagicMock()
     monkeypatch.setattr("src.routes.auth.send_email", mock_send_email)
-    monkeypatch.setattr("src.database.db.get_db", mock_session)
-
     response = client.post("/api/auth/signup", json=user)
     assert response.status_code == 201, response.text
     payload = response.json()
@@ -77,4 +74,3 @@ def test_login_user_with_wrong_email(client, user, session):
     assert response.status_code == 401, response.text
     payload = response.json()
     assert payload["detail"] == "Invalid email"
-
