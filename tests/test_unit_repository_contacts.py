@@ -1,24 +1,11 @@
 from datetime import date, timedelta
-import sys
-import os
 import unittest
 from unittest.mock import MagicMock
-from pathlib import Path
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select, text, extract, desc
-
-# hw_path: str = str(Path(__file__).resolve().parent.parent.joinpath("hw14"))
-# sys.path.append(hw_path)
-# # print(f"{hw_path=}", sys.path)
-# os.environ["PYTHONPATH"] += os.pathsep + hw_path
-# # print(f'{os.environ["PYTHONPATH"]=}')
 
 from src.database.models import Contact, User
-from src.schemas import ContactBase
-# from hw14.src.database.models import User, Contact
-# from hw14.src.shemas import ContactModel, ContactFavoriteModel
-# from import UserModel, UserResponse, UserDetailResponse, NewUserResponse
+from src.schemas import ContactResponse, ContactBase, ContactModel
 
 from src.repository.contacts import (
     get_contacts,
@@ -81,27 +68,14 @@ class TestContactsRepository (unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(result)
 
     async def test_create_contact(self):
-        body = ContactBase(
-            id= "1",
-            first_name="test1",
-            last_name="test2",
-            email="aa@uu.uu",
-            phone_number="+380 (44) 1234567",
-            birth_date="2023-11-11",
-            additional_data = "test",
-            created_at = "2023-11-21 16:53:03.053",
-            updated_at = "2023-11-21 16:53:03.053"
-        )
+        body = ContactModel(first_name="test1", last_name="test2", email="aa@uu.uu", phone="+380 (44) 1234567")
         result = await create(body=body, db=self.session)  # type: ignore
-        self.assertEqual(result.id, body.id)
         self.assertEqual(result.first_name, body.first_name)
         self.assertEqual(result.last_name, body.last_name)
         self.assertEqual(result.email, body.email)
-        self.assertEqual(result.phone_number, body.phone_number)
-        self.assertEqual(result.birth_date, body.birth_date)
-        self.assertEqual(result.additional_data, body.additional_data)
-        # self.assertTrue(hasattr(result, "id"))
-        # self.assertEqual(result.user_id, self.user.id)
+        self.assertEqual(result.phone, body.phone)
+        self.assertTrue(hasattr(result, "id"))
+        self.assertEqual(result.user_id, self.user.id)
 
     async def test_remove_contact_found(self):
         contact = Contact()
@@ -116,7 +90,7 @@ class TestContactsRepository (unittest.IsolatedAsyncioTestCase):
 
     async def test_update_contact_found(self):
         contact = Contact()
-        body=ContactBase(
+        body=Contact(
             id="1",
             first_name="test1",
             last_name="test2",
@@ -134,7 +108,7 @@ class TestContactsRepository (unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result, contact)
 
     async def test_update_contact_not_found(self):
-        body = ContactBase(
+        body = Contact(
             id="1",
             first_name="test1",
             last_name="test2",
